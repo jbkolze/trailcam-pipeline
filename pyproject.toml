@@ -5,7 +5,12 @@ description = "A command-line tool for producing summary reports from camera tra
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "typer>=0.20.1",
+]
+
+[project.scripts]
+trailcam = "trailcam_pipeline.cli:cli"
 
 [tool.ruff.lint]
 # 1. Enable flake8-bugbear (`B`) rules, in addition to the defaults.
