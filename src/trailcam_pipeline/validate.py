@@ -1,0 +1,41 @@
+from pydantic import ValidationError
+
+from trailcam_pipeline.models import Observation, RawDetection
+
+
+def validate_detections(
+    detections: list[RawDetection], min_confidence: float
+) -> list[Observation]:
+    filtered_detections: list[RawDetection] = []
+
+    filtered_detections = filter_by_confidence(detections, min_confidence)
+    observations = transform_into_observations(filtered_detections)
+
+    return observations
+
+
+def filter_by_confidence(
+    detections: list[RawDetection], min_confidence: float
+) -> list[RawDetection]:
+    valid_detections: list[RawDetection] = []
+
+    for detection in detections:
+        if not detection.confidence:
+            detection.confidence = 1
+        if detection.confidence >= min_confidence:
+            valid_detections.append(detection)
+
+    return valid_detections
+
+
+def transform_into_observations(detections: list[RawDetection]) -> list[Observation]:
+    observations: list[Observation] = []
+
+    for detection in detections:
+        try:
+            obs = Observation(**detection.model_dump())
+            observations.append(obs)
+        except ValidationError as e:
+            print(e)
+
+    return observations

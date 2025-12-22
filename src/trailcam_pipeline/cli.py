@@ -1,6 +1,10 @@
+from datetime import timedelta
 from pathlib import Path
 
 from typer import Typer
+
+from trailcam_pipeline.models import Config
+from trailcam_pipeline.pipeline import run_pipeline
 
 cli = Typer()
 
@@ -25,6 +29,17 @@ def run(
     print(f"Event window: {event_window_minutes} minutes")
     if event_window_minutes < 0:
         raise ValueError("event_window_minutes must be equal to or greater than 0.")
+
+    event_timedelta = timedelta(minutes=event_window_minutes)
+
+    config = Config(
+        input_csv_path=input_csv_path,
+        out_dir_path=out_dir_path,
+        min_confidence=min_confidence,
+        event_window_timedelta=event_timedelta,
+    )
+
+    run_pipeline(config)
 
 
 if __name__ == "__main__":
