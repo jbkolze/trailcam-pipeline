@@ -9,6 +9,6 @@ from trailcam_pipeline.validate import validate_detections
 def run_pipeline(config: Config):
     raw_detections = load_detections_from_csv(config.input_csv_path)
     observations = validate_detections(raw_detections, config.min_confidence)
-    events = group_into_events(observations, config.event_window_timedelta)
+    events = group_into_events(observations, config.event_window)
     summaries = summarize_events(events)
     export_summaries(summaries, config.out_dir_path)

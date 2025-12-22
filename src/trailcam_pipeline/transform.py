@@ -4,7 +4,7 @@ from trailcam_pipeline.models import Event, Observation
 
 
 def group_into_events(
-    observations: list[Observation], event_window_minutes: timedelta
+    observations: list[Observation], event_window: timedelta
 ) -> list[Event]:
     events: list[Event] = []
 

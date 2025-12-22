@@ -8,7 +8,7 @@ class Config(BaseModel):
     input_csv_path: FilePath
     out_dir_path: DirectoryPath
     min_confidence: Annotated[float, Field(ge=0, le=1)]
-    event_window_timedelta: timedelta
+    event_window: timedelta
 
 
 class RawDetection(BaseModel):
@@ -37,15 +37,18 @@ class Event(BaseModel):
     event_id: str
     start_time: datetime
     end_time: datetime
-    detections: list[Observation]
+    camera_id: str
+    species: str
+    observations: list[Observation]
 
 
 class EventSummary(BaseModel):
     event_id: str
     start_time: datetime
     end_time: datetime
+    camera_id: str
+    species: str
     duration: timedelta
-    species: str | None = None
     detection_count: int
 
 

@@ -14,6 +14,6 @@ def test_pipeline():
         input_csv_path=Path("tests", "data", "test.csv"),
         out_dir_path=out_dir_path,
         min_confidence=0.8,
-        event_window_timedelta=timedelta(minutes=5),
+        event_window=timedelta(minutes=5),
     )
     run_pipeline(config)

@@ -36,7 +36,7 @@ def run(
         input_csv_path=input_csv_path,
         out_dir_path=out_dir_path,
         min_confidence=min_confidence,
-        event_window_timedelta=event_timedelta,
+        event_window=event_timedelta,
     )
 
     run_pipeline(config)
