@@ -8,13 +8,13 @@ def validate_detections(
 ) -> list[Observation]:
     filtered_detections: list[RawDetection] = []
 
-    filtered_detections = filter_by_confidence(detections, min_confidence)
-    observations = transform_into_observations(filtered_detections)
+    filtered_detections = _filter_by_confidence(detections, min_confidence)
+    observations = _transform_into_observations(filtered_detections)
 
     return observations
 
 
-def filter_by_confidence(
+def _filter_by_confidence(
     detections: list[RawDetection], min_confidence: float
 ) -> list[RawDetection]:
     valid_detections: list[RawDetection] = []
@@ -28,7 +28,7 @@ def filter_by_confidence(
     return valid_detections
 
 
-def transform_into_observations(detections: list[RawDetection]) -> list[Observation]:
+def _transform_into_observations(detections: list[RawDetection]) -> list[Observation]:
     observations: list[Observation] = []
 
     for detection in detections:
