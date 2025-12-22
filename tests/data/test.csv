@@ -1,0 +1,10 @@
+filename,timestamp,camera_id,species,count,confidence,location_id,reviewer
+IMG_0001.JPG,2024-05-01T06:12:03,cam_01,deer,1,0.92,loc_A,auto
+IMG_0002.JPG,2024-05-01T06:12:15,cam_01,deer,2,0.88,loc_A,auto
+IMG_0003.JPG,2024-05-01T06:13:40,cam_01,deer,1,0.95,loc_A,auto
+IMG_0004.JPG,2024-05-01T07:45:10,cam_02,raccoon,1,0.81,loc_B,auto
+IMG_0005.JPG,2024-05-01T07:47:02,cam_02,raccoon,1,0.79,loc_B,auto
+IMG_0006.JPG,2024-05-01T09:02:55,cam_01,,1,0.34,loc_A,auto
+IMG_0007.JPG,2024-05-01T18:21:11,cam_03,fox,1,0.67,loc_C,reviewer_1
+IMG_0008.JPG,2024-05-01T18:22:01,cam_03,fox,,0.72,loc_C,reviewer_1
+IMG_0009.JPG,2024-05-02T05:58:44,cam_01,deer,1,0.91,loc_A,auto
