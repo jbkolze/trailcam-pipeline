@@ -3,6 +3,7 @@ from pathlib import Path
 
 from typer import Typer
 
+from trailcam_pipeline.export import export_summaries
 from trailcam_pipeline.models import Config
 from trailcam_pipeline.pipeline import run_pipeline
 
@@ -34,12 +35,12 @@ def run(
 
     config = Config(
         input_csv_path=input_csv_path,
-        out_dir_path=out_dir_path,
         min_confidence=min_confidence,
         event_window=event_timedelta,
     )
 
-    run_pipeline(config)
+    summaries = run_pipeline(config)
+    export_summaries(summaries, out_dir_path)
 
 
 if __name__ == "__main__":

@@ -1,12 +1,11 @@
 from datetime import datetime, timedelta
 from typing import Annotated
 
-from pydantic import BaseModel, DirectoryPath, Field, FilePath, PositiveInt
+from pydantic import BaseModel, Field, FilePath, PositiveInt
 
 
 class Config(BaseModel):
     input_csv_path: FilePath
-    out_dir_path: DirectoryPath
     min_confidence: Annotated[float, Field(ge=0, le=1)]
     event_window: timedelta
 
