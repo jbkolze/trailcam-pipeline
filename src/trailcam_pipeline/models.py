@@ -57,3 +57,8 @@ class PipelineRun(BaseModel):
     config: Config
     input_hash: str
     pipeline_version: str
+
+
+class ValidationErrorReport(BaseModel):
+    detection: RawDetection
+    error_messages: list[str]

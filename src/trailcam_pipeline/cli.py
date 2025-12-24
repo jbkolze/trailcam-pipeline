@@ -39,7 +39,7 @@ def run(
         event_window=event_timedelta,
     )
 
-    summaries = run_pipeline(config)
+    summaries, _ = run_pipeline(config)
     export_summaries(summaries, out_dir_path)
 
 
