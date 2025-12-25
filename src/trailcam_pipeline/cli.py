@@ -39,8 +39,8 @@ def run(
         event_window=event_timedelta,
     )
 
-    summaries, _ = run_pipeline(config)
-    export_summaries(summaries, out_dir_path)
+    result = run_pipeline(config)
+    export_summaries(result.event_summaries, out_dir_path)
 
 
 if __name__ == "__main__":
