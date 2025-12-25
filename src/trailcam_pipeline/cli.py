@@ -4,6 +4,7 @@ from pathlib import Path
 from typer import Typer
 
 from trailcam_pipeline.export import export_summaries
+from trailcam_pipeline.ingest import CsvFormatError
 from trailcam_pipeline.models import Config
 from trailcam_pipeline.pipeline import run_pipeline
 
@@ -17,6 +18,7 @@ def run(
     min_confidence: float = 0.8,
     event_window_minutes: int = 5,
 ):
+    print("----- Input -----")
     print(f"Input CSV file: {input_csv_path}")
     if not input_csv_path.is_file():
         raise ValueError(f"{input_csv_path} does not exist")
@@ -39,8 +41,20 @@ def run(
         event_window=event_timedelta,
     )
 
-    result = run_pipeline(config)
-    export_summaries(result.event_summaries, out_dir_path)
+    try:
+        print("")
+        print("----- Processing -----")
+        result = run_pipeline(config)
+        print("Data pipeline completed successfully")
+    except CsvFormatError as e:
+        print("Could not process input .csv file:")
+        print(e)
+        return
+
+    if result:
+        print("")
+        print("----- Output -----")
+        export_summaries(result.event_summaries, out_dir_path)
 
 
 if __name__ == "__main__":
