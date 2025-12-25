@@ -12,9 +12,9 @@ def test_low_confidence_detections_filtered():
         factory.make(confidence=0.7),
         factory.make(confidence=0.6),
     ]
-    observations, _ = validate_detections(detections, 0.9)
+    validation = validate_detections(detections, 0.9)
 
-    assert len(observations) == 2
+    assert len(validation.observations) == 2
 
 
 def test_blank_count_or_confidence_populated():
@@ -29,11 +29,11 @@ def test_blank_count_or_confidence_populated():
     detections[1].count = None
     detections[2].confidence = None
 
-    observations, _ = validate_detections(detections, 0.5)
+    validation = validate_detections(detections, 0.5)
 
-    assert len(observations) == 3
-    assert observations[1].count == 1
-    assert observations[2].confidence == 1.0
+    assert len(validation.observations) == 3
+    assert validation.observations[1].count == 1
+    assert validation.observations[2].confidence == 1.0
 
 
 def test_reports_errors_blank_species():
@@ -50,7 +50,7 @@ def test_reports_errors_blank_species():
     detections[0].species = None
     detections[2].species = None
 
-    observations, validation_errors = validate_detections(detections, 0.5)
+    validation = validate_detections(detections, 0.5)
 
-    assert len(observations) == 3
-    assert len(validation_errors) == 2
+    assert len(validation.observations) == 3
+    assert len(validation.errors) == 2

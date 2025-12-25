@@ -64,8 +64,15 @@ class PipelineResult(BaseModel):
     events: list[Event]
     event_summaries: list[EventSummary]
     validation_errors: list[ValidationErrorReport]
+    confidence_filter_count: int
 
 
 class ValidationErrorReport(BaseModel):
     detection: RawDetection
     error_messages: list[str]
+
+
+class ValidationResult(BaseModel):
+    observations: list[Observation]
+    errors: list[ValidationErrorReport]
+    filter_count: int
