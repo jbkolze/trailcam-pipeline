@@ -32,6 +32,17 @@ class Observation(BaseModel):
     reviewer: str | None = None
 
 
+class ValidationErrorReport(BaseModel):
+    detection: RawDetection
+    error_messages: list[str]
+
+
+class ValidationResult(BaseModel):
+    observations: list[Observation]
+    errors: list[ValidationErrorReport]
+    filter_count: int
+
+
 class Event(BaseModel):
     event_id: str
     start_time: datetime
@@ -64,14 +75,3 @@ class PipelineResult(BaseModel):
     events: list[Event]
     validation_errors: list[ValidationErrorReport]
     confidence_filter_count: int
-
-
-class ValidationErrorReport(BaseModel):
-    detection: RawDetection
-    error_messages: list[str]
-
-
-class ValidationResult(BaseModel):
-    observations: list[Observation]
-    errors: list[ValidationErrorReport]
-    filter_count: int
