@@ -3,7 +3,7 @@ from pathlib import Path
 
 from typer import Typer
 
-from trailcam_pipeline.export import export_summaries
+from trailcam_pipeline.export import export_events_csv
 from trailcam_pipeline.ingest import CsvFormatError
 from trailcam_pipeline.models import Config
 from trailcam_pipeline.pipeline import run_pipeline
@@ -51,10 +51,9 @@ def run(
         print(e)
         return
 
-    if result:
-        print("")
-        print("----- Output -----")
-        export_summaries(result.event_summaries, out_dir_path)
+    print("")
+    print("----- Output -----")
+    export_events_csv(result.events, out_dir_path)
 
 
 if __name__ == "__main__":

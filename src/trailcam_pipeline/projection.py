@@ -1,13 +1,13 @@
-from trailcam_pipeline.models import Event, EventSummary
+from trailcam_pipeline.models import Event, EventRow
 
 
-def summarize_events(events: list[Event]):
-    summaries: list[EventSummary] = []
+def events_to_event_rows(events: list[Event]):
+    event_rows: list[EventRow] = []
 
     for event in events:
         duration = event.end_time - event.start_time
         detection_count = max(obs.count for obs in event.observations)
-        summary = EventSummary(
+        event_row = EventRow(
             event_id=event.event_id,
             start_time=event.start_time,
             end_time=event.end_time,
@@ -16,6 +16,6 @@ def summarize_events(events: list[Event]):
             duration=duration,
             detection_count=detection_count,
         )
-        summaries.append(summary)
+        event_rows.append(event_row)
 
-    return summaries
+    return event_rows

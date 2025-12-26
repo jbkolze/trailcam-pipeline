@@ -41,7 +41,7 @@ class Event(BaseModel):
     observations: list[Observation]
 
 
-class EventSummary(BaseModel):
+class EventRow(BaseModel):
     event_id: str
     start_time: datetime
     end_time: datetime
@@ -62,7 +62,6 @@ class PipelineRun(BaseModel):
 class PipelineResult(BaseModel):
     observations: list[Observation]
     events: list[Event]
-    event_summaries: list[EventSummary]
     validation_errors: list[ValidationErrorReport]
     confidence_filter_count: int
 
