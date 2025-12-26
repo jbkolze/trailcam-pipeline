@@ -1,8 +1,17 @@
 import csv
+from datetime import date
 from pathlib import Path
 
-from trailcam_pipeline.models import Event, EventRow
-from trailcam_pipeline.projection import events_to_event_rows
+from trailcam_pipeline.models import (
+    DailySpeciesCount,
+    DailySpeciesCountRow,
+    Event,
+    EventRow,
+)
+from trailcam_pipeline.projection import (
+    daily_species_counts_to_rows,
+    events_to_event_rows,
+)
 
 
 def export_events_csv(events: list[Event], out_dir: Path) -> None:
@@ -16,5 +25,22 @@ def export_events_csv(events: list[Event], out_dir: Path) -> None:
 
         for event_row in event_rows:
             writer.writerow(event_row.model_dump())
+
+    print(f"Data has been written to {csv_path}")
+
+
+def export_daily_species_counts_csv(
+    daily_counts: dict[date, DailySpeciesCount], out_dir: Path
+) -> None:
+    daily_count_rows = daily_species_counts_to_rows(daily_counts)
+    csv_path = out_dir / "daily_counts.csv"
+    field_names = DailySpeciesCountRow.model_fields.keys()
+
+    with open(csv_path, mode="w") as csv_file:
+        writer = csv.DictWriter(csv_file, field_names)
+        writer.writeheader()
+
+        for daily_count_row in daily_count_rows:
+            writer.writerow(daily_count_row.model_dump())
 
     print(f"Data has been written to {csv_path}")

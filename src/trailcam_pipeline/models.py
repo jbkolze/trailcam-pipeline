@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from typing import Annotated
 
 from pydantic import BaseModel, Field, FilePath, PositiveInt
@@ -59,7 +59,7 @@ class EventRow(BaseModel):
     camera_id: str
     species: str
     duration: timedelta
-    detection_count: int
+    individual_count: int
 
 
 class PipelineRun(BaseModel):
@@ -75,3 +75,16 @@ class PipelineResult(BaseModel):
     events: list[Event]
     validation_errors: list[ValidationErrorReport]
     confidence_filter_count: int
+
+
+class DailySpeciesCount(BaseModel):
+    date: date
+    individual_count: dict[str, int] = {}
+    event_count: dict[str, int] = {}
+
+
+class DailySpeciesCountRow(BaseModel):
+    date: date
+    species: str
+    individual_count: int
+    event_count: int
