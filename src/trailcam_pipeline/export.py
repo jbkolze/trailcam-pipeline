@@ -7,10 +7,12 @@ from trailcam_pipeline.models import (
     DailySpeciesCountRow,
     Event,
     EventRow,
+    RelativeAbundanceIndexRow,
 )
 from trailcam_pipeline.projection import (
     daily_species_counts_to_rows,
     events_to_event_rows,
+    relative_abundance_to_rows,
 )
 
 
@@ -42,5 +44,20 @@ def export_daily_species_counts_csv(
 
         for daily_count_row in daily_count_rows:
             writer.writerow(daily_count_row.model_dump())
+
+    print(f"Data has been written to {csv_path}")
+
+
+def export_relative_abundance_csv(abundance: dict[str, float], out_dir: Path) -> None:
+    abundance_rows = relative_abundance_to_rows(abundance)
+    csv_path = out_dir / "relative_abundance.csv"
+    field_names = RelativeAbundanceIndexRow.model_fields.keys()
+
+    with open(csv_path, mode="w") as csv_file:
+        writer = csv.DictWriter(csv_file, field_names)
+        writer.writeheader()
+
+        for abundance_row in abundance_rows:
+            writer.writerow(abundance_row.model_dump())
 
     print(f"Data has been written to {csv_path}")

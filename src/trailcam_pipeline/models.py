@@ -88,3 +88,8 @@ class DailySpeciesCountRow(BaseModel):
     species: str
     individual_count: int
     event_count: int
+
+
+class RelativeAbundanceIndexRow(BaseModel):
+    species: str
+    abundance_index: float

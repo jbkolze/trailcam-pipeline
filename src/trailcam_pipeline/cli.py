@@ -3,8 +3,13 @@ from pathlib import Path
 
 from typer import Typer
 
+from trailcam_pipeline.analysis.abundance import calculate_relative_abundance_index
 from trailcam_pipeline.analysis.count import create_daily_species_counts
-from trailcam_pipeline.export import export_daily_species_counts_csv, export_events_csv
+from trailcam_pipeline.export import (
+    export_daily_species_counts_csv,
+    export_events_csv,
+    export_relative_abundance_csv,
+)
 from trailcam_pipeline.ingest import CsvFormatError
 from trailcam_pipeline.models import Config
 from trailcam_pipeline.pipeline import run_pipeline
@@ -49,6 +54,7 @@ def run(
         print("Data pipeline completed successfully")
         daily_counts = create_daily_species_counts(result.events)
         print("Daily species count analysis completed successfully")
+        abundance = calculate_relative_abundance_index(result.events)
     except CsvFormatError as e:
         print("Could not process input .csv file:")
         print(e)
@@ -58,6 +64,7 @@ def run(
     print("----- Output -----")
     export_events_csv(result.events, out_dir_path)
     export_daily_species_counts_csv(daily_counts, out_dir_path)
+    export_relative_abundance_csv(abundance, out_dir_path)
 
 
 if __name__ == "__main__":

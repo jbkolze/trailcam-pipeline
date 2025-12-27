@@ -5,6 +5,7 @@ from trailcam_pipeline.models import (
     DailySpeciesCountRow,
     Event,
     EventRow,
+    RelativeAbundanceIndexRow,
 )
 
 
@@ -41,5 +42,14 @@ def daily_species_counts_to_rows(daily_counts: dict[date, DailySpeciesCount]):
                     event_count=count.event_count[species],
                 )
             )
+
+    return rows
+
+
+def relative_abundance_to_rows(abundance: dict[str, float]):
+    rows: list[RelativeAbundanceIndexRow] = []
+
+    for species, index in abundance.items():
+        rows.append(RelativeAbundanceIndexRow(species=species, abundance_index=index))
 
     return rows
