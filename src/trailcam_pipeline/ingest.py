@@ -1,6 +1,8 @@
 import csv
 from pathlib import Path
 
+from dateutil.parser import parse
+
 from trailcam_pipeline.models import RawDetection
 
 
@@ -23,7 +25,23 @@ def load_detections_from_csv(input_csv_path: Path) -> list[RawDetection]:
 
 
 def _normalize_row(row: dict[str, str]) -> dict[str, str | None]:
-    return {k: (v if v != "" else None) for k, v in row.items()}
+    normalized: dict[str, str | None] = {}
+    for k, v in row.items():
+        if v == "":
+            normalized[k] = None
+            continue
+
+        # Adjust for non-zero-padded timestamps
+        if k == "timestamp":
+            try:
+                dt = parse(v)
+                normalized[k] = dt.strftime("%Y-%m-%d %H:%M:%S")
+            except Exception as e:
+                raise CsvFormatError(f"Invalid timestamp '{v}': {e}") from e
+        else:
+            normalized[k] = v
+
+    return normalized
 
 
 class CsvFormatError(Exception):
