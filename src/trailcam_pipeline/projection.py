@@ -1,6 +1,9 @@
 from datetime import date
 
+import pandas as pd
+
 from trailcam_pipeline.models import (
+    ActivityDensity,
     DailySpeciesCount,
     DailySpeciesCountRow,
     Event,
@@ -53,3 +56,15 @@ def relative_abundance_to_rows(abundance: dict[str, float]):
         rows.append(RelativeAbundanceIndexRow(species=species, abundance_index=index))
 
     return rows
+
+
+def activity_density_to_df(density: ActivityDensity):
+    bins = density.bins
+    bin_minutes = 1440 // len(bins)
+    n_bins = len(bins)
+
+    times = [(i * bin_minutes) / 60.0 for i in range(n_bins)]
+
+    return pd.DataFrame(
+        {"hour": times, "density": density.bins, "species": density.species}
+    )

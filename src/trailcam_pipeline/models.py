@@ -93,3 +93,18 @@ class DailySpeciesCountRow(BaseModel):
 class RelativeAbundanceIndexRow(BaseModel):
     species: str
     abundance_index: float
+
+
+class ActivityHistogram(BaseModel):
+    species: str
+    bins: list[int]
+
+
+class SmoothActivityHistogram(BaseModel):
+    species: str
+    bins: list[float]
+
+
+class ActivityDensity(BaseModel):
+    species: str
+    bins: list[float]

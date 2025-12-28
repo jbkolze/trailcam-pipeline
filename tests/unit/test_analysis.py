@@ -4,7 +4,9 @@ from pytest import approx  # type: ignore
 
 from tests.factories import EventFactory
 from trailcam_pipeline.analysis.abundance import calculate_relative_abundance_index
+from trailcam_pipeline.analysis.activity import create_activity_histograms
 from trailcam_pipeline.analysis.count import create_daily_species_counts
+from trailcam_pipeline.models import Event
 
 
 def test_daily_species_count():
@@ -58,3 +60,22 @@ def test_relative_abundance_index():
 
     assert abundance["deer"] == approx(7 / 3, 0.1)
     assert abundance["raccoon"] == approx(1 / 3, 0.1)
+
+
+def test_activity_histogram():
+    dt = datetime(2025, 12, 20, 2, 2)
+    factory = EventFactory()
+    events: list[Event] = []
+    for i in range(9):
+        events.append(factory.make(event_time=dt + timedelta(days=i)))
+    for i in range(18):
+        events.append(factory.make(event_time=dt + timedelta(days=i, minutes=30)))
+
+    activity = create_activity_histograms(events)["deer"]
+
+    smoothed = (
+        [0.0] * 4 + [1.0, 1.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 2.0, 2.0] + [0.0] * 81
+    )
+
+    assert activity.species == "deer"
+    assert activity.bins == approx([x / sum(smoothed) for x in smoothed])
