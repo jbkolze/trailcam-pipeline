@@ -3,11 +3,11 @@ from pathlib import Path
 
 from dateutil.parser import parse
 
-from trailcam_pipeline.models import RawDetection
+from trailcam_pipeline.models import IngestCsvResult, RawDetection
 
 
-def load_detections_from_csv(input_csv_path: Path) -> list[RawDetection]:
-    detections: list[RawDetection] = []
+def load_detections_from_csv(input_csv_path: Path) -> IngestCsvResult:
+    results = IngestCsvResult()
 
     required_columns = {"filename", "timestamp", "camera_id", "species"}
 
@@ -17,11 +17,16 @@ def load_detections_from_csv(input_csv_path: Path) -> list[RawDetection]:
         if missing:
             raise CsvFormatError(f"Input .csv missing required columns: {missing}")
         for row in reader:
-            norm_row = _normalize_row(row)
-            detection = RawDetection.model_validate(norm_row)
-            detections.append(detection)
+            results.count.read += 1
+            try:
+                norm_row = _normalize_row(row)
+                detection = RawDetection.model_validate(norm_row)
+                results.detections.append(detection)
+                results.count.written += 1
+            except CsvFormatError:
+                results.count.dropped += 1
 
-    return detections
+    return results
 
 
 def _normalize_row(row: dict[str, str]) -> dict[str, str | None]:

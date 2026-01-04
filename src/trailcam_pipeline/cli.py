@@ -11,10 +11,11 @@ from trailcam_pipeline.export import (
     export_events_csv,
     export_relative_abundance_csv,
 )
-from trailcam_pipeline.ingest import CsvFormatError
+from trailcam_pipeline.ingest import CsvFormatError, load_detections_from_csv
 from trailcam_pipeline.models import Config
-from trailcam_pipeline.pipeline import run_pipeline
 from trailcam_pipeline.plot import export_activity_density_plots
+from trailcam_pipeline.transform import group_into_events
+from trailcam_pipeline.validate import validate_detections
 
 cli = Typer()
 
@@ -27,7 +28,7 @@ def run(
     event_window_minutes: int = 5,
 ):
     activity_dir = out_dir_path / "activity"
-    print("----- Input -----")
+    print("----- Config -----")
     print(f"Input CSV file: {input_csv_path}")
     if not input_csv_path.is_file():
         raise ValueError(f"{input_csv_path} does not exist")
@@ -54,15 +55,33 @@ def run(
 
     try:
         print("")
+        print("----- Ingestion -----")
+        ingest_result = load_detections_from_csv(config.input_csv_path)
+        print(f"Read {ingest_result.count.read} lines from CSV")
+        print(f"Dropped {ingest_result.count.dropped} lines")
+        print(f"Wrote {ingest_result.count.written} detection records")
+
+        print("")
         print("----- Processing -----")
-        result = run_pipeline(config)
-        print("Data pipeline completed successfully")
-        daily_counts = create_daily_species_counts(result.events)
-        print("Daily species count analysis completed successfully")
-        abundance = calculate_relative_abundance_index(result.events)
-        print("Relative abundance analysis completed successfully")
-        densities = create_activity_histograms(result.events)
-        print("Species activity windows computed successfully")
+        validation_result = validate_detections(
+            ingest_result.detections, config.min_confidence
+        )
+        print(
+            f"Validated {len(validation_result.observations)} observations from {ingest_result.count.written} detections"
+        )
+        events = group_into_events(validation_result.observations, config.event_window)
+        print(
+            f"Grouped {len(validation_result.observations)} observations into {len(events)} events"
+        )
+
+        print("")
+        print("----- Analysis -----")
+        daily_counts = create_daily_species_counts(events)
+        print(f"Computed daily species count for {len(daily_counts)} dates")
+        abundance = calculate_relative_abundance_index(events)
+        print(f"Computed relative abundanced for {len(abundance)} species")
+        densities = create_activity_histograms(events)
+        print(f"Computed activity windows for {len(densities)} species")
     except CsvFormatError as e:
         print("Could not process input .csv file:")
         print(e)
@@ -70,7 +89,7 @@ def run(
 
     print("")
     print("----- Output -----")
-    events_csv = export_events_csv(result.events, out_dir_path)
+    events_csv = export_events_csv(events, out_dir_path)
     print(f"Exported processed events data to {events_csv}")
     counts_csv = export_daily_species_counts_csv(daily_counts, out_dir_path)
     print(f"Exported daily species counts to {counts_csv}")

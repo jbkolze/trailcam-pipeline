@@ -8,11 +8,14 @@ from trailcam_pipeline.validate import validate_detections
 
 
 def run_pipeline(config: Config) -> PipelineResult:
-    raw_detections = load_detections_from_csv(config.input_csv_path)
-    validation_result = validate_detections(raw_detections, config.min_confidence)
+    ingest_result = load_detections_from_csv(config.input_csv_path)
+    validation_result = validate_detections(
+        ingest_result.detections, config.min_confidence
+    )
     events = group_into_events(validation_result.observations, config.event_window)
 
     return PipelineResult(
+        ingest_count=ingest_result.count,
         observations=validation_result.observations,
         events=events,
         validation_errors=validation_result.errors,

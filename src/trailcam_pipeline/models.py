@@ -10,6 +10,12 @@ class Config(BaseModel):
     event_window: timedelta
 
 
+class IngestCsvCount(BaseModel):
+    read: int = 0
+    dropped: int = 0
+    written: int = 0
+
+
 class RawDetection(BaseModel):
     filename: str
     timestamp: str
@@ -19,6 +25,11 @@ class RawDetection(BaseModel):
     confidence: float | None = None
     location_id: str | None = None
     reviewer: str | None = None
+
+
+class IngestCsvResult(BaseModel):
+    count: IngestCsvCount = Field(default_factory=IngestCsvCount)
+    detections: list[RawDetection] = Field(default_factory=list[RawDetection])
 
 
 class Observation(BaseModel):
@@ -71,6 +82,7 @@ class PipelineRun(BaseModel):
 
 
 class PipelineResult(BaseModel):
+    ingest_count: IngestCsvCount
     observations: list[Observation]
     events: list[Event]
     validation_errors: list[ValidationErrorReport]
