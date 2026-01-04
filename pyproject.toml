@@ -11,6 +11,9 @@ dependencies = [
     "typer>=0.20.1",
 ]
 
+[tool.uv]
+package = true
+
 [project.scripts]
 trailcam = "trailcam_pipeline.cli:cli"
 
