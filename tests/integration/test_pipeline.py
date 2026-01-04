@@ -7,8 +7,8 @@ from trailcam_pipeline.pipeline import run_pipeline
 
 def test_pipeline():
     config = Config(
-        input_csv_path=Path("tests", "data", "test.csv"),
-        min_confidence=0.8,
+        input_csv_path=Path("data", "example.csv"),
+        min_confidence=0.7,
         event_window=timedelta(minutes=5),
     )
     run_pipeline(config)
