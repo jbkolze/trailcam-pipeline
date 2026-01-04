@@ -24,7 +24,7 @@ cli = Typer()
 def run(
     input_csv_path: Path,
     out_dir_path: Path,
-    min_confidence: float = 0.8,
+    min_confidence: float = 0.7,
     event_window_minutes: int = 5,
 ):
     activity_dir = out_dir_path / "activity"
