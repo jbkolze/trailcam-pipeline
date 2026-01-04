@@ -1,5 +1,10 @@
 # trailcam-pipeline
 
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![GitHub License](https://img.shields.io/github/license/jbkolze/trailcam-pipeline)
+![Status](https://img.shields.io/badge/status-stable-green)
+
+
 A Python-based CLI tool for summarizing annotated camera trap data into biologically meaningful metrics
 
 This tool is intended for ecologists, conservation practitioners, and hobbyists working with annotated camera trap datasets.
