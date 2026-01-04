@@ -70,10 +70,14 @@ def run(
 
     print("")
     print("----- Output -----")
-    export_events_csv(result.events, out_dir_path)
-    export_daily_species_counts_csv(daily_counts, out_dir_path)
-    export_relative_abundance_csv(abundance, out_dir_path)
-    export_activity_density_plots(densities, activity_dir)
+    events_csv = export_events_csv(result.events, out_dir_path)
+    print(f"Exported processed events data to {events_csv}")
+    counts_csv = export_daily_species_counts_csv(daily_counts, out_dir_path)
+    print(f"Exported daily species counts to {counts_csv}")
+    abundance_csv = export_relative_abundance_csv(abundance, out_dir_path)
+    print(f"Exported relative abundance statistics to {abundance_csv}")
+    plot_paths = export_activity_density_plots(densities, activity_dir)
+    print(f"Exported {len(plot_paths)} species activity plot(s) to {activity_dir}")
 
 
 if __name__ == "__main__":

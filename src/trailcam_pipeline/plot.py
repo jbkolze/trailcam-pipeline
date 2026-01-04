@@ -7,7 +7,11 @@ from trailcam_pipeline.models import ActivityDensity
 from trailcam_pipeline.projection import activity_density_to_df
 
 
-def export_activity_density_plots(densities: dict[str, ActivityDensity], out_dir: Path):
+def export_activity_density_plots(
+    densities: dict[str, ActivityDensity], out_dir: Path
+) -> list[Path]:
+    paths: list[Path] = []
+
     for species in densities.keys():
         df = activity_density_to_df(densities[species])
 
@@ -21,4 +25,8 @@ def export_activity_density_plots(densities: dict[str, ActivityDensity], out_dir
         plt.ylabel("Normalized activity density")
         plt.title(f"{species.capitalize()} activity window")
 
-        plt.savefig(out_dir / f"{species}.png")
+        path = out_dir / f"{species}.png"
+        plt.savefig(path)
+        paths.append(path)
+
+    return paths

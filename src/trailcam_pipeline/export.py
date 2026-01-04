@@ -16,7 +16,7 @@ from trailcam_pipeline.projection import (
 )
 
 
-def export_events_csv(events: list[Event], out_dir: Path) -> None:
+def export_events_csv(events: list[Event], out_dir: Path) -> Path:
     event_rows = events_to_event_rows(events)
     csv_path = out_dir / "events_summary.csv"
     field_names = EventRow.model_fields.keys()
@@ -28,12 +28,12 @@ def export_events_csv(events: list[Event], out_dir: Path) -> None:
         for event_row in event_rows:
             writer.writerow(event_row.model_dump())
 
-    print(f"Data has been written to {csv_path}")
+    return csv_path
 
 
 def export_daily_species_counts_csv(
     daily_counts: dict[date, DailySpeciesCount], out_dir: Path
-) -> None:
+) -> Path:
     daily_count_rows = daily_species_counts_to_rows(daily_counts)
     csv_path = out_dir / "daily_counts.csv"
     field_names = DailySpeciesCountRow.model_fields.keys()
@@ -45,10 +45,10 @@ def export_daily_species_counts_csv(
         for daily_count_row in daily_count_rows:
             writer.writerow(daily_count_row.model_dump())
 
-    print(f"Data has been written to {csv_path}")
+    return csv_path
 
 
-def export_relative_abundance_csv(abundance: dict[str, float], out_dir: Path) -> None:
+def export_relative_abundance_csv(abundance: dict[str, float], out_dir: Path) -> Path:
     abundance_rows = relative_abundance_to_rows(abundance)
     csv_path = out_dir / "relative_abundance.csv"
     field_names = RelativeAbundanceIndexRow.model_fields.keys()
@@ -60,4 +60,4 @@ def export_relative_abundance_csv(abundance: dict[str, float], out_dir: Path) ->
         for abundance_row in abundance_rows:
             writer.writerow(abundance_row.model_dump())
 
-    print(f"Data has been written to {csv_path}")
+    return csv_path
